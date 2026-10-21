@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14213d">
+  <title>บันทึกรอบบิลรายเดือน</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">BILL TRACKER</p>
+      <h1>บันทึกรอบบิลรายเดือน</h1>
+      <p class="subtitle">บันทึกง่าย คำนวณอัตโนมัติ เชื่อม Google Sheets</p>
+    </div>
+    <span class="sync-pill" id="syncStatus">ยังไม่ได้เชื่อมต่อ</span>
+  </header>
+
+  <main class="container">
+    <section class="panel form-panel">
+      <div class="section-heading">
+        <div><h2>บันทึกข้อมูลประจำวัน</h2><p>กรอกจำนวนบิลทั้งหมดของวันที่ต้องการ</p></div>
+      </div>
+      <form id="billForm">
+        <div class="form-grid">
+          <label>วันที่
+            <input id="billDate" type="date" required>
+          </label>
+          <label>จำนวนบิลทั้งหมด
+            <input id="totalBills" type="number" min="0" step="1" inputmode="numeric" placeholder="เช่น 50" required>
+          </label>
+        </div>
+        <div class="calculation">
+          <div><span>หักบิลประจำวัน</span><strong>25 บิล</strong></div>
+          <div><span>บิลสุทธิ</span><strong id="netBillsPreview">0 บิล</strong></div>
+          <div><span>ยอดก่อนหัก</span><strong id="grossMoneyPreview">0.00 บาท</strong></div>
+          <div class="highlight"><span>ยอดหลังหัก</span><strong id="netMoneyPreview">0.00 บาท</strong></div>
+        </div>
+        <div class="button-row">
+          <button type="submit" class="primary" id="saveButton">บันทึกข้อมูล</button>
+          <button type="button" class="secondary" id="resetButton">ล้างฟอร์ม</button>
+        </div>
+        <p class="hint">สูตร: บิลสุทธิ = จำนวนบิลทั้งหมด − 25 (ถ้าติดลบจะนับเป็น 0) และเงิน = จำนวนบิล × 15 บาท</p>
+      </form>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card"><span>บิลทั้งหมดในเดือน</span><strong id="monthBills">0</strong><small>บิล</small></article>
+      <article class="stat-card"><span>บิลสุทธิในเดือน</span><strong id="monthNetBills">0</strong><small>บิล หลังหัก 25 บิล/วันที่บันทึก</small></article>
+      <article class="stat-card"><span>ยอดเงินก่อนหัก</span><strong id="monthGrossMoney">0.00</strong><small>บาท</small></article>
+      <article class="stat-card accent"><span>ยอดเงินหลังหัก</span><strong id="monthNetMoney">0.00</strong><small>บาท</small></article>
+    </section>
+
+    <section class="panel">
+      <div class="history-heading">
+        <div><h2>ประวัติรายวัน</h2><p>เลือกเดือนเพื่อดูข้อมูลย้อนหลัง</p></div>
+        <label class="month-picker">เดือนที่แสดง
+          <input id="monthFilter" type="month">
+        </label>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>วันที่</th><th>บิลทั้งหมด</th><th>หัก</th><th>บิลสุทธิ</th>
+            <th>เงินก่อนหัก</th><th>เงินหลังหัก</th><th>จัดการ</th>
+          </tr></thead>
+          <tbody id="historyBody"><tr><td colspan="7" class="empty">กำลังโหลดข้อมูล...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="button-row export-row">
+        <button class="secondary" id="exportButton" type="button">ส่งออก CSV</button>
+        <button class="secondary" id="refreshButton" type="button">โหลดข้อมูลใหม่</button>
+      </div>
+    </section>
+
+    <section class="panel setup-panel">
+      <h2>ตั้งค่าการเชื่อมต่อ Google Sheets</h2>
+      <p>หลังเผยแพร่ Google Apps Script เป็น Web App ให้วาง URL ที่ได้ในช่องนี้ แล้วกดบันทึก</p>
+      <label>Web App URL
+        <input id="apiUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec">
+      </label>
+      <div class="button-row">
+        <button class="primary" id="connectButton" type="button">บันทึก URL และเชื่อมต่อ</button>
+        <button class="secondary" id="localModeButton" type="button">ใช้โหมดทดลองในเครื่อง</button>
+      </div>
+      <p class="hint">โหมดทดลองเก็บข้อมูลในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ได้ส่งเข้า Google Sheets</p>
+    </section>
+    <p class="footer-note">ค่าตั้งต้น: หัก 25 บิลต่อวันที่มีรายการบันทึก · 15 บาทต่อบิล</p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
