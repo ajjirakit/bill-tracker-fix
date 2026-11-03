@@ -33,37 +33,102 @@ function selectedMonthRecords() {
   const month = $("monthFilter").value;
   return records.filter(r => r.date.startsWith(month)).sort((a,b) => b.date.localeCompare(a.date));
 }
+
 function render() {
   const monthRecords = selectedMonthRecords();
+
   const sum = monthRecords.reduce((a, r) => ({
     totalBills: a.totalBills + r.totalBills,
     netBills: a.netBills + r.netBills,
     grossMoney: a.grossMoney + r.grossMoney,
     netMoney: a.netMoney + r.netMoney
-  }), {totalBills:0, netBills:0, grossMoney:0, netMoney:0});
-  $("monthBills").textContent = sum.totalBills.toLocaleString("th-TH");
-  $("monthNetBills").textContent = sum.netBills.toLocaleString("th-TH");
+  }), {
+    totalBills: 0,
+    netBills: 0,
+    grossMoney: 0,
+    netMoney: 0
+  });
+
+  $("monthBills").textContent =
+    sum.totalBills.toLocaleString("th-TH");
+
+  $("monthNetBills").textContent =
+    sum.netBills.toLocaleString("th-TH");
+
   $("monthGrossMoney").textContent = money(sum.grossMoney);
   $("monthNetMoney").textContent = money(sum.netMoney);
+
   const body = $("historyBody");
+
   if (!monthRecords.length) {
     const otherMonths = records.length > 0;
-    body.innerHTML = `<tr><td colspan="7" class="empty">${otherMonths ? `ไม่มีข้อมูลในเดือน ${escapeHtml($("monthFilter").value)} แต่พบข้อมูล ${records.length} รายการในเดือนอื่น กรุณาเลือกเดือนที่ต้องการดู` : 'ยังไม่มีข้อมูลใน Google Sheets กรุณาบันทึกข้อมูลหรือกด “โหลดข้อมูลใหม่”'}</td></tr>`;
+
+    body.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty">
+          ${
+            otherMonths
+              ? `ไม่มีข้อมูลในเดือน ${
+                  escapeHtml($("monthFilter").value)
+                } แต่พบข้อมูล ${
+                  records.length
+                } รายการในเดือนอื่น กรุณาเลือกเดือนที่ต้องการดู`
+              : "ยังไม่มีข้อมูล กรุณาบันทึกข้อมูลหรือกดโหลดข้อมูลใหม่"
+          }
+        </td>
+      </tr>
+    `;
+
     return;
   }
-  body.innerHTML = monthRecords.map(r => `<tr>
-    <td>${escapeHtml(r.date)}</td>
-    <td>${r.totalBills.toLocaleString("th-TH")}</td>
-    <td>${r.deduction.toLocaleString("th-TH")}</td>
-    <td>${r.netBills.toLocaleString("th-TH")}</td>
-    <td>${money(r.grossMoney)}</td>
-    <td><strong>${money(r.netMoney)}</strong></td>
-    <td><div class="table-actions">
-      <button class="secondary small-btn" data-edit="${escapeHtml(r.date)}">แก้ไข</button>
-      <button class="small-btn delete-btn" data-delete="${escapeHtml(r.date)}">ลบ</button>
-    </div></td>
-  </tr>`).join("");
+
+  body.innerHTML = monthRecords.map(r => `
+    <tr>
+      <td data-label="วันที่">
+        ${escapeHtml(r.date)}
+      </td>
+
+      <td data-label="บิลทั้งหมด">
+        ${r.totalBills.toLocaleString("th-TH")}
+      </td>
+
+      <td data-label="หักบิล">
+        ${r.deduction.toLocaleString("th-TH")}
+      </td>
+
+      <td data-label="บิลสุทธิ">
+        ${r.netBills.toLocaleString("th-TH")}
+      </td>
+
+      <td data-label="เงินก่อนหัก">
+        ${money(r.grossMoney)} บาท
+      </td>
+
+      <td data-label="เงินหลังหัก">
+        <strong>${money(r.netMoney)} บาท</strong>
+      </td>
+
+      <td data-label="จัดการ">
+        <div class="table-actions">
+          <button
+            class="secondary small-btn"
+            data-edit="${escapeHtml(r.date)}"
+          >
+            แก้ไข
+          </button>
+
+          <button
+            class="small-btn delete-btn"
+            data-delete="${escapeHtml(r.date)}"
+          >
+            ลบ
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
 }
+
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
