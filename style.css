@@ -77,3 +77,95 @@ tbody tr:last-child td { border-bottom: 0; }
   .calculation { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: 1fr; }
 }
+
+/* ประวัติรายวันสำหรับมือถือ */
+@media (max-width: 600px) {
+
+  .history-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .month-picker {
+    width: 100%;
+    max-width: none;
+  }
+
+  .table-wrap {
+    overflow: visible;
+    border: none;
+  }
+
+  table {
+    width: 100%;
+    min-width: 0;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    font-size: 14px;
+  }
+
+  table thead {
+    display: none;
+  }
+
+  table tbody tr {
+    display: block;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(20, 33, 61, 0.05);
+  }
+
+  table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 0;
+    text-align: right;
+    white-space: normal;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  table tbody td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #687386;
+    text-align: left;
+    flex: 1;
+  }
+
+  table tbody td:first-child {
+    text-align: right;
+  }
+
+  table tbody td:last-child {
+    border-bottom: none;
+  }
+
+  table tbody td.empty {
+    display: block;
+    text-align: center !important;
+    padding: 20px;
+  }
+
+  table tbody td.empty::before {
+    content: none;
+  }
+
+  .table-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .small-btn {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+}
